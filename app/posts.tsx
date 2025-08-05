@@ -3,18 +3,11 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Suspense } from "react";
-import useSWR from "swr";
 
 type SortSetting = ["date", "desc" | "asc"];
 
-const fetcher = (url: string) => fetch(url).then(res => res.json());
-
-export function Posts({ posts: initialPosts }) {
+export function Posts({ posts }) {
   const [sort, setSort] = useState<SortSetting>(["date", "desc"]);
-  const { data: posts } = useSWR("/api/posts", fetcher, {
-    fallbackData: initialPosts,
-    refreshInterval: 5000,
-  });
 
   function sortDate() {
     setSort(sort => [
@@ -22,7 +15,6 @@ export function Posts({ posts: initialPosts }) {
       sort[0] !== "date" || sort[1] === "asc" ? "desc" : "asc",
     ]);
   }
-
 
   return (
     <Suspense fallback={null}>

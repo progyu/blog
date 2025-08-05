@@ -1,31 +1,14 @@
 "use client";
 
 import { useSelectedLayoutSegments } from "next/navigation";
-import { useEffect, useRef } from "react";
 import { ago } from "time-ago";
-import useSWR from "swr";
 import type { Post } from "@/app/get-posts";
-
-const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 export function Header({ posts }: { posts: Post[] }) {
   const segments = useSelectedLayoutSegments();
-  // segments can be:
-  // date/post
-  // lang/date/post
-  const initialPost = posts.find(
-    post => post.id === segments[segments.length - 1]
-  );
-  const { data: post, mutate } = useSWR(
-    `/api/view?id=${initialPost?.id ?? ""}`,
-    fetcher,
-    {
-      fallbackData: initialPost,
-      refreshInterval: 5000,
-    }
-  );
+  const post = posts.find(post => post.id === segments[segments.length - 1]);
 
-  if (initialPost == null) return <></>;
+  if (post == null) return <></>;
 
   return (
     <>
