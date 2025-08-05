@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@types/comma-number": "^2.1.0",
+    "@types/node": "^24.2.0",
     "@types/react": "npm:types-react@19.0.0-rc.1",
     "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
     "autoprefixer": "^10.4.14",
