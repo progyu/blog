@@ -12,11 +12,10 @@ export const metadata = {
   title: "LeeGyuHa blog",
   description: "LeeGyuHa",
   openGraph: {
-    title: "LeeGyuHag blog",
+    title: "LeeGyuHa blog",
     description: "LeeGyuHa",
-    // TODO:
-    url: "https://rauchg.com",
-    siteName: "LeeGyuHag blog",
+    url: "https://blog-leegyuha.vercel.app/",
+    siteName: "LeeGyuHa blog",
     images: ["/opengraph-image"],
   },
   twitter: {
@@ -24,8 +23,7 @@ export const metadata = {
     site: "@GyuHa",
     creator: "@GyuHa",
   },
-  // TODO:
-  metadataBase: new URL("https://rauchg.com"),
+  metadataBase: new URL("https://blog-leegyuha.vercel.app/"),
 };
 
 export const viewport = {

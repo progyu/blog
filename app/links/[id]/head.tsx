@@ -17,8 +17,7 @@ export default function LinkHead({ params }: { params: { id: string } }) {
       <meta name="twitter:site" content="@GyuHa10" />
       <meta
         property="og:image"
-        // TODO:
-        content={`https://rauchg.com/og/${link.image}`}
+        content={`https://blog-leegyuha.vercel.app/og/${link.image}`}
       />
     </>
   );

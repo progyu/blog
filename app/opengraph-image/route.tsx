@@ -29,8 +29,7 @@ export async function GET() {
             LeeGyuHa
           </div>
           <div tw="grow" />
-          {/* TODO: */}
-          <div tw="text-[28px]">rauchg.com</div>
+          <div tw="text-[28px]">blog-leegyuha.vercel.app</div>
         </header>
 
         <main tw="flex mt-10 flex-col w-full" style={font("Roboto Mono 400")}>

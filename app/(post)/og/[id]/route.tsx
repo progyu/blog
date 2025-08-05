@@ -44,8 +44,7 @@ export async function GET(_req: Request, props) {
             LeeGyuHa
           </div>
           <div tw="grow" />
-          {/* TODO: */}
-          <div tw="text-[28px]">rauchg.com</div>
+          <div tw="text-[28px]">blog-leegyuha.vercel.app</div>
         </header>
 
         <main tw="flex grow pb-3 flex-col items-center justify-center">
