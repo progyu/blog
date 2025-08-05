@@ -1,10 +1,22 @@
-const withMDX = require("@next/mdx")();
+import createMDX from "@next/mdx";
+import rehypePrettyCode from "rehype-pretty-code";
+import remarkFrontmatter from "remark-frontmatter";
+import remarkGfm from "remark-gfm";
+import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 
-module.exports = withMDX({
-  pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
-  experimental: {
-    mdxRs: true,
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: [
+      remarkGfm,
+      remarkFrontmatter,
+      [remarkMdxFrontmatter, { name: "metadata" }],
+    ],
+    rehypePlugins: [rehypePrettyCode],
   },
+});
+
+export default withMDX({
+  pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
   images: {
     minimumCacheTTL: 2678400,
     remotePatterns: [
