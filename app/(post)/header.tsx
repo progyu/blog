@@ -2,12 +2,21 @@
 
 import { useSelectedLayoutSegments } from "next/navigation";
 import type { Post } from "@/app/get-posts";
+import { parseDate } from "@/app/utils/date";
 
 export function Header({ posts }: { posts: Post[] }) {
   const segments = useSelectedLayoutSegments();
   const post = posts.find(post => post.id === segments[segments.length - 1]);
 
   if (post == null) return <></>;
+
+  const displayDate = parseDate(post.date)
+    .toLocaleDateString("ko-KR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    })
+    .replaceAll(" ", "");
 
   return (
     <>
@@ -17,21 +26,7 @@ export function Header({ posts }: { posts: Post[] }) {
 
       <p className="font-mono flex text-xs text-gray-500 dark:text-gray-500">
         <span className="flex-grow">
-          <span className="hidden md:inline">
-            <span>
-              <a
-                href="https://x.com/GyuHa10"
-                className="hover:text-gray-800 dark:hover:text-gray-400"
-                target="_blank"
-              >
-                @GyuHa
-              </a>
-            </span>
-
-            <span className="mx-2">|</span>
-          </span>
-
-          <span>{post.date}</span>
+          <span>{displayDate}</span>
         </span>
       </p>
     </>

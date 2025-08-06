@@ -5,6 +5,7 @@ import { join } from "path";
 export type Post = {
   id: string;
   date: string;
+  slug: string;
   title: string;
   content: string;
 };
@@ -40,8 +41,9 @@ const getPostBySlug = (slug: string): Post => {
 
   return {
     id,
-    title: data.title,
     date: data.date,
+    slug,
+    title: data.title,
     content,
   };
 };
