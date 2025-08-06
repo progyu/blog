@@ -1,7 +1,6 @@
 "use client";
 
 import { useSelectedLayoutSegments } from "next/navigation";
-import { ago } from "time-ago";
 import type { Post } from "@/app/get-posts";
 
 export function Header({ posts }: { posts: Post[] }) {
@@ -32,13 +31,7 @@ export function Header({ posts }: { posts: Post[] }) {
             <span className="mx-2">|</span>
           </span>
 
-          {/* since we will pre-render the relative time, over time it
-           * will diverge with what the user relative time is, so we suppress the warning.
-           * In practice this is not an issue because we revalidate the entire page over time
-           * and because we will move this to a server component with template.tsx at some point */}
-          <span suppressHydrationWarning={true}>
-            {post.date} ({ago(post.date, true)} ago)
-          </span>
+          <span>{post.date}</span>
         </span>
       </p>
     </>
