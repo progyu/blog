@@ -18,33 +18,43 @@ import { YouTube } from "app/(post)/components/youtube";
 import { Ref, FootNotes, FootNote } from "app/(post)/components/footnotes";
 import { Blockquote as blockquote } from "app/(post)/components/blockquote";
 
+/**
+ * next-mdx-remote에서 사용할 MDX 컴포넌트들
+ */
+export const mdxComponents = {
+  a,
+  h1,
+  h2,
+  h3,
+  p,
+  ol,
+  ul,
+  li,
+  hr,
+  code,
+  pre: Snippet,
+  img: Image,
+  blockquote,
+  Tweet,
+  Image,
+  Figure,
+  Snippet,
+  Caption,
+  Callout,
+  YouTube,
+  Ref,
+  FootNotes,
+  FootNote,
+};
+
+/**
+ * Next.js 전역 MDX 설정용 함수
+ */
 export function useMDXComponents(components: {
   [component: string]: React.ComponentType;
 }) {
   return {
     ...components,
-    a,
-    h1,
-    h2,
-    h3,
-    p,
-    ol,
-    ul,
-    li,
-    hr,
-    code,
-    pre: Snippet,
-    img: Image,
-    blockquote,
-    Tweet,
-    Image,
-    Figure,
-    Snippet,
-    Caption,
-    Callout,
-    YouTube,
-    Ref,
-    FootNotes,
-    FootNote,
+    ...mdxComponents,
   };
 }

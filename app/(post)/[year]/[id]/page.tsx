@@ -1,6 +1,6 @@
 import { getPosts } from "@/app/get-posts";
 import { generatePostMetadata, generateJsonLd } from "@/app/utils/metadata";
-import { mdxComponents } from "@/app/utils/mdx-components";
+import { mdxComponents } from "@/mdx-components";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
 
