@@ -9,6 +9,7 @@
 
 - **MDX 기반 콘텐츠**: Frontmatter와 함께 리치한 콘텐츠
 - **동적 라우팅**: `/[year]/[id]` 형식의 SEO 친화적 URL
+- **읽기 시간 표시**: 포스트별 예상 읽기 시간 자동 계산
 - **반응형 디자인**: 모든 디바이스에서 최적화된 경험
 - **다크/라이트 모드**: 사용자 선호에 맞는 테마 지원
 - **SEO 최적화**: 구조화된 데이터, 메타태그, OpenGraph
@@ -31,6 +32,7 @@
 
 - `next-mdx-remote`: 동적 MDX 컴파일
 - `gray-matter`: Frontmatter 파싱
+- `reading-time`: 포스트 읽기 시간 계산
 - `react-tweet`: Twitter 임베드
 - `react-youtube`: YouTube 임베드
 - `rehype-pretty-code`: 코드 하이라이팅
