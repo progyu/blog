@@ -7,10 +7,13 @@ export type Post = {
   date: string;
   slug: string;
   title: string;
+  description: string;
   content: string;
+  updatedAt?: string;
 };
 
-const postRoot = join(process.cwd(), "app/(post)");
+const postRoot = join(process.cwd(), "src/posts");
+// const postRoot = join(process.cwd(), "app/(post)");
 
 const getPostSlugs = () => {
   const dirs = fs.readdirSync(postRoot, { recursive: true });
@@ -18,24 +21,13 @@ const getPostSlugs = () => {
 
   // MDX 파일만 필터링하고 년도/포스트ID 형식으로 변환
   return paths
-    .filter((path: string) => {
-      // page.mdx 파일만 선택하고, 년도/포스트ID 구조인지 확인
-      const parts = path.split("/");
-      return (
-        parts.length === 3 &&
-        parts[2] === "page.mdx" &&
-        /^\d{4}$/.test(parts[0])
-      ); // 첫 번째 부분이 4자리 년도인지 확인
-    })
-    .map((path: string) => {
-      const parts = path.split("/");
-      return `${parts[0]}/${parts[1]}`; // "2025/ai-society-future" 형식으로 반환
-    });
+    .filter(path => path.split("/").length === 2)
+    .map(path => path.replace(/\.mdx$/, ""));
 };
 
 const getPostBySlug = (slug: string): Post => {
   const [_, id] = slug.split("/");
-  const fullPath = join(postRoot, `${slug}/page.mdx`);
+  const fullPath = join(postRoot, `${slug}.mdx`); // .mdx 확장자 직접 추가
   const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data, content } = matter(fileContents);
 
@@ -44,7 +36,9 @@ const getPostBySlug = (slug: string): Post => {
     date: data.date,
     slug,
     title: data.title,
+    description: data.description,
     content,
+    updatedAt: data.updatedAt,
   };
 };
 
