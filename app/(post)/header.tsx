@@ -28,6 +28,7 @@ export function Header({ posts }: { posts: Post[] }) {
         <span className="flex-grow">
           <span>{displayDate}</span>
         </span>
+        <span className="ml-2">{post.readingTime} min read</span>
       </p>
     </>
   );

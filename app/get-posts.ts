@@ -1,6 +1,7 @@
 import fs from "fs";
 import matter from "gray-matter";
 import { join } from "path";
+import readingTime from "reading-time";
 
 export type Post = {
   id: string;
@@ -10,6 +11,7 @@ export type Post = {
   description: string;
   content: string;
   updatedAt?: string;
+  readingTime: number;
 };
 
 const postRoot = join(process.cwd(), "src/posts");
@@ -31,6 +33,9 @@ const getPostBySlug = (slug: string): Post => {
   const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data, content } = matter(fileContents);
 
+  // reading-time 라이브러리로 읽기 시간 계산
+  const time = Math.ceil(readingTime(content).minutes);
+
   return {
     id,
     date: data.date,
@@ -39,6 +44,7 @@ const getPostBySlug = (slug: string): Post => {
     description: data.description,
     content,
     updatedAt: data.updatedAt,
+    readingTime: time,
   };
 };
 
