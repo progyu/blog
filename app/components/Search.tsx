@@ -1,7 +1,8 @@
 "use client";
 
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from "@headlessui/react";
-import { Fragment, useState, useMemo } from "react";
+import { Fragment, useState, useMemo, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Fuse, { type FuseResult } from "fuse.js";
 import type { Post } from "@/app/get-posts";
 import { Highlight } from "./Highlight";
@@ -9,8 +10,10 @@ import { Highlight } from "./Highlight";
 type FusePostResult = FuseResult<Post>;
 
 export function Search({ posts }: { posts: Post[] }) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [activeIndex, setActiveIndex] = useState(-1);
 
   const fuse = useMemo(
     () =>
@@ -35,12 +38,45 @@ export function Search({ posts }: { posts: Post[] }) {
   const openModal = () => setIsOpen(true);
   const closeModal = () => {
     setQuery("");
+    setActiveIndex(-1);
     setIsOpen(false);
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
+    setActiveIndex(-1);
   };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActiveIndex(prev => (prev + 1) % results.length);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActiveIndex(prev => (prev - 1 + results.length) % results.length);
+    } else if (e.key === 'Enter') {
+      if (activeIndex !== -1) {
+        e.preventDefault();
+        const post = results[activeIndex].item;
+        router.push(`/${post.slug}`);
+        closeModal();
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'k' && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault();
+        openModal();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
     <>
@@ -87,6 +123,7 @@ export function Search({ posts }: { posts: Post[] }) {
                       type="text"
                       value={query}
                       onChange={handleSearch}
+                      onKeyDown={handleKeyDown}
                       placeholder="Search by title, content, or tags..."
                       className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -95,13 +132,19 @@ export function Search({ posts }: { posts: Post[] }) {
                   <div className="mt-4 max-h-96 overflow-y-auto">
                     {results.length > 0 ? (
                       <ul>
-                        {results.map(({ item: post, matches }) => {
+                        {results.map(({ item: post, matches }, index) => {
                           const titleMatch = matches?.find(m => m.key === 'title');
                           const contentMatch = matches?.find(m => m.key === 'content' || m.key === 'description');
+                          const isActive = index === activeIndex;
 
                           return (
                             <li key={post.slug} className="mt-2">
-                              <a href={`/${post.slug}`} className="block p-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+                              <a
+                                href={`/${post.slug}`}
+                                className={`block p-4 rounded-md transition-colors ${
+                                  isActive ? 'bg-blue-100 dark:bg-blue-900' : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+                                }`}
+                              >
                                 <div className="font-semibold text-gray-900 dark:text-gray-100">
                                   {titleMatch ? (
                                     <Highlight text={post.title} indices={titleMatch.indices} />
