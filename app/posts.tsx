@@ -68,7 +68,7 @@ function List({ posts, sort }: ListProps) {
 
         return (
           <li key={post.slug}>
-            <Link href={post.slug}>
+            <Link href={`/${post.slug}`}>
               <span
                 className={`flex transition-[background-color] hover:bg-gray-100 dark:hover:bg-[#242424] active:bg-gray-200 dark:active:bg-[#222] border-y border-gray-200 dark:border-[#313131]
                 ${!firstOfYear ? "border-t-0" : ""}

@@ -19,7 +19,11 @@ export async function generateMetadata({
   };
 }
 
-export default async function TagPage({ params }: { params: Promise<{ tag: string }> }) {
+export default async function TagPage({
+  params,
+}: {
+  params: Promise<{ tag: string }>;
+}) {
   const { tag } = await params;
   const decodedTag = decodeURIComponent(tag);
   const allPosts = await getPosts();
@@ -27,9 +31,7 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
 
   return (
     <div className="max-w-2xl mx-auto px-4">
-      <h1 className="text-3xl font-bold mb-8">
-        Tag: <span className="text-blue-500">{decodedTag}</span>
-      </h1>
+      <h1 className="text-3xl font-bold mb-8">Tag: {decodedTag}</h1>
       <Posts posts={posts} />
     </div>
   );
