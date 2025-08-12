@@ -1,14 +1,29 @@
+'use client';
+
 import { ThemeToggle } from "./theme-toggle";
 import { Logo } from "./logo";
 import Link from "next/link";
+import { useSearch } from "./contexts/SearchContext";
 
 export function Header() {
+  const { openSearch } = useSearch();
+
   return (
     <header className="flex mb-5 md:mb-10 items-center">
       <Logo />
 
       <nav className="font-mono text-xs grow justify-end items-center flex gap-1 md:gap-3">
         <ThemeToggle />
+
+        {/* 검색 버튼 */}
+        <button
+          onClick={openSearch}
+          className="inline-flex hover:bg-gray-200 dark:hover:bg-[#313131] active:bg-gray-300 dark:active:bg-[#242424] rounded-sm p-2 transition-[background-color] items-center gap-1"
+          title="Search (⌘K)"
+        >
+          <SearchIcon />
+          <span className="hidden md:inline text-gray-600 dark:text-gray-400">⌘K</span>
+        </button>
 
         <Link
           href="/tags"
@@ -96,6 +111,26 @@ function XIcon(props: any) {
         d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 
  21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
       />
+    </svg>
+  );
+}
+
+function SearchIcon(props: any) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={16}
+      height={16}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <circle cx="11" cy="11" r="8"></circle>
+      <path d="m21 21-4.35-4.35"></path>
     </svg>
   );
 }
