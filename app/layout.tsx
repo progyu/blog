@@ -6,6 +6,7 @@ import { Analytics } from "./analytics";
 import { Header } from "./header";
 import { Footer } from "./footer";
 import { ConditionalWebsiteJsonLd } from "./components/ConditionalJsonLd";
+import { SearchProviderWrapper } from "./components/SearchProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -131,10 +132,12 @@ export default function RootLayout({
           }}
         />
 
-        <main className="p-6 pt-3 md:pt-6 min-h-screen">
-          <Header />
-          {children}
-        </main>
+        <SearchProviderWrapper>
+          <main className="p-6 pt-3 md:pt-6 min-h-screen">
+            <Header />
+            {children}
+          </main>
+        </SearchProviderWrapper>
 
         <Footer />
         <Analytics />

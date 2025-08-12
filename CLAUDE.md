@@ -125,3 +125,5 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - 이미지 캐싱 TTL: 31일 (2678400초)
 - 원격 이미지 패턴: Twitter, Amazon 등 허용
 - MDX 동적 컴파일로 SSG 최적화
+
+- commit message에 claude code가 만들었다는 내용은 추가하지 않는다.
