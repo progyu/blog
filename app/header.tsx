@@ -1,13 +1,16 @@
 import { ThemeToggle } from "./theme-toggle";
 import { Logo } from "./logo";
 import Link from "next/link";
+import { Search } from "./components/Search";
+import type { Post } from "./get-posts";
 
-export function Header() {
+export function Header({ posts }: { posts: Post[] }) {
   return (
     <header className="flex mb-5 md:mb-10 items-center">
       <Logo />
 
       <nav className="font-mono text-xs grow justify-end items-center flex gap-1 md:gap-3">
+        <Search posts={posts} />
         <ThemeToggle />
 
         <Link
