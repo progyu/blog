@@ -3,6 +3,7 @@
 import { useSelectedLayoutSegments } from "next/navigation";
 import type { Post } from "@/app/get-posts";
 import { parseDate } from "@/app/utils/date";
+import { Tags } from "./components/tags";
 
 export function Header({ posts }: { posts: Post[] }) {
   const segments = useSelectedLayoutSegments();
@@ -30,6 +31,7 @@ export function Header({ posts }: { posts: Post[] }) {
         </span>
         <span className="ml-2">{post.readingTime} min read</span>
       </p>
+      <Tags tags={post.tags} />
     </>
   );
 }

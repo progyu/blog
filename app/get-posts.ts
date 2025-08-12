@@ -12,6 +12,7 @@ export type Post = {
   content: string;
   updatedAt?: string;
   readingTime: number;
+  tags?: string[];
 };
 
 const postRoot = join(process.cwd(), "src/posts");
@@ -44,6 +45,7 @@ const getPostBySlug = (slug: string): Post => {
     content,
     updatedAt: data.updatedAt,
     readingTime: time,
+    tags: data.tags,
   };
 };
 
