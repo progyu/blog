@@ -6,6 +6,7 @@ import { Analytics } from "./analytics";
 import { Header } from "./header";
 import { Footer } from "./footer";
 import { ConditionalWebsiteJsonLd } from "./components/ConditionalJsonLd";
+import { getPosts } from "./get-posts";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -85,11 +86,13 @@ export const viewport = {
   themeColor: "transparent",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const posts = await getPosts();
+
   return (
     <html
       lang="ko"
@@ -106,12 +109,13 @@ export default function RootLayout({
 
       <body className="dark:text-gray-100 max-w-2xl m-auto">
         {/* 조건부 Website JSON-LD (포스트 페이지가 아닐 때만) */}
-        <ConditionalWebsiteJsonLd 
+        <ConditionalWebsiteJsonLd
           websiteData={{
             "@context": "https://schema.org",
             "@type": "Website",
             name: "LeeGyuHa Blog",
-            description: "개발자 이규하의 기술 블로그입니다. AI, 웹 개발, 프론트엔드 기술에 대한 인사이트를 공유합니다.",
+            description:
+              "개발자 이규하의 기술 블로그입니다. AI, 웹 개발, 프론트엔드 기술에 대한 인사이트를 공유합니다.",
             url: "https://blog-leegyuha.vercel.app",
             author: {
               "@type": "Person",
@@ -132,7 +136,7 @@ export default function RootLayout({
         />
 
         <main className="p-6 pt-3 md:pt-6 min-h-screen">
-          <Header />
+          <Header posts={posts} />
           {children}
         </main>
 
