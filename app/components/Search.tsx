@@ -4,6 +4,7 @@ import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from "@
 import { Fragment, useState, useMemo } from "react";
 import Fuse, { type FuseResult } from "fuse.js";
 import type { Post } from "@/app/get-posts";
+import { Highlight } from "./Highlight";
 
 type FusePostResult = FuseResult<Post>;
 
@@ -21,8 +22,10 @@ export function Search({ posts }: { posts: Post[] }) {
           { name: "tags", weight: 1.5 },
         ],
         includeScore: true,
-        threshold: 0.3,
+        includeMatches: true,
         minMatchCharLength: 2,
+        threshold: 0.3,
+        ignoreLocation: true,
       }),
     [posts]
   );
@@ -92,14 +95,29 @@ export function Search({ posts }: { posts: Post[] }) {
                   <div className="mt-4 max-h-96 overflow-y-auto">
                     {results.length > 0 ? (
                       <ul>
-                        {results.map(({ item: post }) => (
-                          <li key={post.slug} className="mt-2">
-                            <a href={`/${post.slug}`} className="block p-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
-                              <p className="font-semibold text-gray-900 dark:text-gray-100">{post.title}</p>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{post.description}</p>
-                            </a>
-                          </li>
-                        ))}
+                        {results.map(({ item: post, matches }) => {
+                          const titleMatch = matches?.find(m => m.key === 'title');
+                          const contentMatch = matches?.find(m => m.key === 'content' || m.key === 'description');
+
+                          return (
+                            <li key={post.slug} className="mt-2">
+                              <a href={`/${post.slug}`} className="block p-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <div className="font-semibold text-gray-900 dark:text-gray-100">
+                                  {titleMatch ? (
+                                    <Highlight text={post.title} indices={titleMatch.indices} />
+                                  ) : (
+                                    post.title
+                                  )}
+                                </div>
+                                {contentMatch && (
+                                  <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                    <Highlight text={contentMatch.value!} indices={contentMatch.indices} />
+                                  </div>
+                                )}
+                              </a>
+                            </li>
+                          );
+                        })}
                       </ul>
                     ) : (
                       query.length > 0 && <p className="text-center text-gray-500 py-4">No results found.</p>
