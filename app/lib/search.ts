@@ -60,13 +60,14 @@ export function highlightText(
   const match = matches?.find(m => m.key === fieldName);
   if (!match) return text;
 
+  // 역순으로 정렬하여 문자열 인덱스가 변경되지 않도록 함
+  const indices = match.indices.slice().sort((a, b) => b[0] - a[0]);
   let result = text;
-  const indices = match.indices;
 
   for (const [start, end] of indices) {
-    result =
+    result = 
       result.slice(0, start) +
-      "<mark>" +
+      "<mark class=\"bg-yellow-200 dark:bg-yellow-800\">" +
       result.slice(start, end + 1) +
       "</mark>" +
       result.slice(end + 1);

@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { Command } from "cmdk";
+import DOMPurify from "isomorphic-dompurify";
 import { useSearch } from "../contexts/SearchContext";
 import { getSearchHistory, highlightText } from "../lib/search";
 
@@ -27,23 +28,23 @@ export function SearchModal() {
   }, [isOpen]);
 
   // 선택 가능한 항목들 생성
-  const selectableItems = [
+  const selectableItems = useMemo(() => [
     ...(!searchQuery
       ? searchHistory.map(query => ({ type: "history" as const, data: query }))
       : []),
     ...(searchQuery
       ? searchResults.map(result => ({ type: "result" as const, data: result }))
       : []),
-  ];
+  ], [searchQuery, searchHistory, searchResults]);
 
   // 선택 핸들러
-  const handleSelect = (item: (typeof selectableItems)[0]) => {
+  const handleSelect = useCallback((item: (typeof selectableItems)[0]) => {
     if (item.type === "history") {
       setSearchQuery(item.data);
     } else if (item.type === "result") {
       navigateToPost(item.data.item.slug);
     }
-  };
+  }, [setSearchQuery, navigateToPost]);
 
   // 키보드 네비게이션 핸들러
   useEffect(() => {
@@ -72,7 +73,7 @@ export function SearchModal() {
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, selectedIndex, selectableItems, setSelectedIndex]);
+  }, [isOpen, selectedIndex, selectableItems, setSelectedIndex, handleSelect]);
 
   // selectedIndex를 선택 가능한 항목 수에 맞게 조정
   useEffect(() => {
@@ -93,7 +94,12 @@ export function SearchModal() {
 
       {/* 모달 */}
       <div className="fixed inset-x-0 top-20 mx-auto max-w-2xl z-50 px-4">
-        <Command className="bg-white dark:bg-gray-900 rounded-lg shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700">
+        <Command 
+          className="bg-white dark:bg-gray-900 rounded-lg shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700"
+          role="dialog"
+          aria-labelledby="search-title"
+          aria-describedby="search-description"
+        >
           {/* 검색 입력창 */}
           <div className="flex items-center border-b border-gray-200 dark:border-gray-700 px-4">
             <SearchIcon className="mr-3 text-gray-400" />
@@ -102,6 +108,8 @@ export function SearchModal() {
               onValueChange={setSearchQuery}
               placeholder="검색어를 입력하세요..."
               className="flex-1 py-4 bg-transparent outline-none text-gray-900 dark:text-gray-100 placeholder-gray-400"
+              aria-label="검색어 입력"
+              aria-describedby="search-help"
               autoFocus
             />
             <span className="text-xs text-gray-400 ml-2">ESC 닫기</span>
@@ -173,7 +181,6 @@ export function SearchModal() {
                           value={`${post.title} ${
                             post.description
                           } ${post.tags?.join(" ")} ${post.content}`}
-                          // value={post.title}
                           onSelect={() =>
                             handleSelect({ type: "result", data: result })
                           }
@@ -195,13 +202,15 @@ export function SearchModal() {
                                       : "text-gray-900 dark:text-gray-100"
                                   }`}
                                   dangerouslySetInnerHTML={{
-                                    __html: matches
-                                      ? highlightText(
-                                          post.title,
-                                          matches,
-                                          "title"
-                                        )
-                                      : post.title,
+                                    __html: DOMPurify.sanitize(
+                                      matches
+                                        ? highlightText(
+                                            post.title,
+                                            matches,
+                                            "title"
+                                          )
+                                        : post.title
+                                    ),
                                   }}
                                 />
                                 <span className="text-xs text-gray-500">
@@ -216,13 +225,15 @@ export function SearchModal() {
                                       : "text-gray-600 dark:text-gray-400"
                                   }`}
                                   dangerouslySetInnerHTML={{
-                                    __html: matches
-                                      ? highlightText(
-                                          post.description,
-                                          matches,
-                                          "description"
-                                        )
-                                      : post.description,
+                                    __html: DOMPurify.sanitize(
+                                      matches
+                                        ? highlightText(
+                                            post.description,
+                                            matches,
+                                            "description"
+                                          )
+                                        : post.description
+                                    ),
                                   }}
                                 />
                               )}
@@ -234,13 +245,15 @@ export function SearchModal() {
                                       : "text-gray-600 dark:text-gray-400"
                                   }`}
                                   dangerouslySetInnerHTML={{
-                                    __html: matches
-                                      ? highlightText(
-                                          post.content,
-                                          matches,
-                                          "content"
-                                        )
-                                      : post.content,
+                                    __html: DOMPurify.sanitize(
+                                      matches
+                                        ? highlightText(
+                                            post.content,
+                                            matches,
+                                            "content"
+                                          )
+                                        : post.content
+                                    ),
                                   }}
                                 />
                               )}
@@ -283,7 +296,10 @@ export function SearchModal() {
           </Command.List>
 
           {/* 하단 도움말 */}
-          <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-2 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+          <div 
+            className="border-t border-gray-200 dark:border-gray-700 px-4 py-2 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400"
+            id="search-help"
+          >
             <div className="flex gap-4">
               <span>↑↓ 이동</span>
               <span>↵ 선택</span>

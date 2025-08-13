@@ -80,9 +80,7 @@ export function SearchProvider({ children }: SearchProviderProps) {
 
   // 검색 인덱스 초기화
   const initializeSearch = useCallback((posts: Post[]) => {
-    console.log("Creating search index with posts:", posts);
     const index = createSearchIndex(posts);
-    console.log("Search index created:", index);
     setSearchIndex(index);
   }, []);
 
