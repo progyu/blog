@@ -19,32 +19,26 @@ export function SearchModal() {
     navigateToPost,
   } = useSearch();
 
-  const [searchHistory, setSearchHistory] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (isOpen) {
-      setSearchHistory(getSearchHistory());
-    }
-  }, [isOpen]);
-
   // 선택 가능한 항목들 생성
-  const selectableItems = useMemo(() => [
-    ...(!searchQuery
-      ? searchHistory.map(query => ({ type: "history" as const, data: query }))
-      : []),
-    ...(searchQuery
-      ? searchResults.map(result => ({ type: "result" as const, data: result }))
-      : []),
-  ], [searchQuery, searchHistory, searchResults]);
+  const selectableItems = useMemo(
+    () => [
+      ...(searchQuery
+        ? searchResults.map(result => ({
+            type: "result" as const,
+            data: result,
+          }))
+        : []),
+    ],
+    [searchQuery, searchResults]
+  );
 
   // 선택 핸들러
-  const handleSelect = useCallback((item: (typeof selectableItems)[0]) => {
-    if (item.type === "history") {
-      setSearchQuery(item.data);
-    } else if (item.type === "result") {
+  const handleSelect = useCallback(
+    (item: (typeof selectableItems)[0]) => {
       navigateToPost(item.data.item.slug);
-    }
-  }, [setSearchQuery, navigateToPost]);
+    },
+    [navigateToPost]
+  );
 
   // 키보드 네비게이션 핸들러
   useEffect(() => {
@@ -94,7 +88,7 @@ export function SearchModal() {
 
       {/* 모달 */}
       <div className="fixed inset-x-0 top-20 mx-auto max-w-2xl z-50 px-4">
-        <Command 
+        <Command
           className="bg-white dark:bg-gray-900 rounded-lg shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700"
           role="dialog"
           aria-labelledby="search-title"
@@ -122,44 +116,6 @@ export function SearchModal() {
               <div className="px-4 py-3 text-gray-500 dark:text-gray-400">
                 검색중...
               </div>
-            )}
-
-            {/* 검색 기록 */}
-            {!searchQuery && searchHistory.length > 0 && (
-              <>
-                <div className="px-4 py-2 text-xs font-medium text-gray-500 dark:text-gray-400">
-                  최근 검색
-                </div>
-                {searchHistory.map((query, index) => {
-                  const isSelected = selectedIndex === index;
-                  return (
-                    <Command.Item
-                      key={query}
-                      value={query}
-                      onSelect={() =>
-                        handleSelect({ type: "history", data: query })
-                      }
-                      className={`flex items-center px-4 py-2 cursor-pointer rounded-md transition-colors ${
-                        isSelected
-                          ? "bg-blue-100 dark:bg-blue-900/50 border-l-2 border-blue-500"
-                          : "hover:bg-gray-100 dark:hover:bg-gray-800"
-                      }`}
-                      data-selected={isSelected}
-                    >
-                      <HistoryIcon className="mr-3 text-gray-400" />
-                      <span
-                        className={`${
-                          isSelected
-                            ? "text-blue-700 dark:text-blue-300"
-                            : "text-gray-700 dark:text-gray-300"
-                        }`}
-                      >
-                        {query}
-                      </span>
-                    </Command.Item>
-                  );
-                })}
-              </>
             )}
 
             {/* 검색 결과 */}
@@ -288,7 +244,7 @@ export function SearchModal() {
             )}
 
             {/* 검색어 없을 때 */}
-            {!searchQuery && searchHistory.length === 0 && (
+            {!searchQuery && (
               <div className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
                 검색어를 입력하세요
               </div>
@@ -296,7 +252,7 @@ export function SearchModal() {
           </Command.List>
 
           {/* 하단 도움말 */}
-          <div 
+          <div
             className="border-t border-gray-200 dark:border-gray-700 px-4 py-2 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400"
             id="search-help"
           >
@@ -326,24 +282,6 @@ function SearchIcon({ className = "" }) {
         strokeLinejoin="round"
         strokeWidth={2}
         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-      />
-    </svg>
-  );
-}
-
-function HistoryIcon({ className = "" }) {
-  return (
-    <svg
-      className={`w-4 h-4 ${className}`}
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
       />
     </svg>
   );
