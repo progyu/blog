@@ -1,0 +1,169 @@
+---
+title: "[서평] LLM을 활용한 AI 에이전트 개발 입문"
+description: "[서평] LLM을 활용한 AI 에이전트 개발 입문"
+date: "2025-10-14T00:00:00.000Z"
+openGraph:
+  images: ["/og/ai-agent-with-llm"]
+tags: ["ai", "agent", "llm", "서평"]
+---
+
+## 이 책을 선택한 이유
+
+- claude code와 gemini 유료 버전을 사용하면서 AI를 잘 활용하는 방법에 대해 관심이 생겼지만, 비용적인 부담 그리고, 사적인 자료들을 외부와 연결된 AI 서비스에서 활용하는 것이 찜찜했음.
+- 내 컴퓨터 내부에서 활용이 가능하여 외부 반출 우려가 없고, 따로 비용을 내지 않는, open source 로컬 LLM 모델과 open source ai agent에 대한 관심이 생김.
+- Whisper 기반 음성 인식(ASR, Automatic Speech Recognition) 모델을 활용한, 오픈 소스 중 Apple Silicon에 최적화된 mlx whisper 모델을 활용할 수 있는 오픈 소스를 찾아 실제로 번역해보고 싶은 영상을 번역해보며, 흥미를 느끼기 시작함.
+
+## 이 책을 통해 새롭게 알게 된 개념
+
+**RAG(Retrieval Augmented Generation)**
+
+- 필요한 정보를 검색해서 답변할 때 활용하도록 돕는 기술.
+- 언어 모델이 최신 자료, 기업 내부 자료, 전문적인 참고 자료 등을 바탕으로 답변할 수 있게 해준다.
+
+**청킹 (chunking)**
+
+- 대량의 문서를 페이지 단위로 자르는 것
+- 문서의 길이가 너무 길어 언어 모델이 한 번에 처리할 수 없을 때 사용
+- 언어 모델이 필요한 정보를 찾기 쉬워짐
+- 낮은 토큰 비용 발생
+
+**청크 (chunk)**
+
+- 청킹 작업을 통해 나누어진 문서 조각
+
+**유사도**
+
+- 코사인 유사도, 유클리디안 유사도
+- 임베딩 모델과 결과에 따라 유사도는 달라질 수 있다.
+- 벡터로 변환된 수치를 이용해 유사도를 계산한다.
+
+**벡터 (vector)**
+
+- 정보를 수치로 표현하여 일렬로 나열한 것
+
+**임베딩 (embedding)**
+
+- 질문과 관련 있을 가능성이 높은 청크를 찾기 위해서 텍스트 간의 유사도를 비교하는 과정이 필요, 유사도를 수학적으로 비교하기 위해 같은 단위의 수치 정보로 변환하는 과정
+
+**펑션 콜링(function calling)과 도구 호출(tool call)**
+
+- 외부 API나 직접 만든 함수를 호출하여 그 결과를 바탕으로 답변할 수 있게 하는 기술
+
+**랭체인(LangChain)**
+
+- LLM을 활용하여 AI 애플리케이션을 쉽게 개발할 수 있도록 도와주는 프레임워크
+- 랭체인의 편의성
+  - 기존에는 오픈 AI와 같은 언어 모델의 API를 사용해 원하는 기능을 구현하려면 모든 코드를 직접 작성해야 했다.
+  - 랭체인은 이 작업을 간소화 할 수 있는 다양한 도구와 모듈을 제공한다.
+  - 기존에는 언어 모델마다 API 사용방식이 달라서 기존 프롬그램을 다른 언어 모델로 변경하려면 코드 전반을 수정해야 했다.
+  - 다른 언어 모델을 쉽게 교체할 수 있다. 특정 언어모델에 종속되지 않고 다양한 모델의 장점을 활용한 애플리케이션 개발이 가능하다.
+
+**LCEL (LangChain Expression Language)**
+
+- 랭체인에서 복잡한 작업 흐름을 간단하게 만들고 관리할 수 있도록 돕는 도구
+- 작업 흐름을 연결하는 것은 체인(chain)이라고 한다.
+- 읽기 쉽게 축약
+- ex) chain = model | parser → | 연산자로 모델에서 결과를 얻고 파서를 이용해 텍스트만 추출하는 2단계를 축약하여 표현 가능
+
+**멀티 에이전트**
+
+- 여러 AI 에이전트들이 협업하도록 시스템을 구성하는 방식
+
+**랭그래프(LangGraph)**
+
+- 멀티에이전트를 구현하는 프레임워크
+
+**노드, 엣지, 상태**
+
+- 노드: 하나의 작업이나 단계
+- 엣지: 노드의 연결
+- 상태: 노드가 작업한 결과를 기록해 두는 작업 일지
+
+**라우터**
+
+- ai 에이전트가 상황에 맞게 다음에 해야 할 일을 알아서 결정하도록 만드는 것.
+- 입력한 내용에 따라 여러 개의 실행 경로 중에서 적절한 경로를 결정해 다음 노드를 선택하는 기능
+- 상황에 따라 방향을 결정하는 것을 라우팅이라고 한다.
+- 조건에 따라 활성화 되거나 비활성화되는 조건부 엣지를 사용한다.
+
+**화자 분리(Speaker Diarization)**
+
+- 화자 분리 모델이 따로 있음.
+
+**멀티턴 대화**
+
+- 여러 번 대화(턴)할 때 이전 대화를 기억하고 적절하게 반응하는 것
+
+**질의 확장 (query augmentation)**
+
+- 사용자의 질문을 더 명확하게 수정하는 작업
+- ex) 언어 모델과 무선 헤드폰에 관한 대화 도중 "가성비 좋은거 추천해줘" 라는 질문을 한다면 이전 문맥을 파악하여 언어 모델에게 전달 되는 질문은 "무선 헤드폰 중 가성비 좋은거 추천해줘"라는 질문이 되어야 언어 모델이 정확한 답변을 할 수 있다.
+
+**오버랩 (overlap)**
+
+- 인접한 청크 간에 중복된 내용을 포함시켜 중요한 정보가 누락되지 않도록 일종의 buffer를 두는 것.
+
+**컨텍스트 윈도우 (context window)**
+
+- 언어 모델이 한 번에 처리할 수 있는 텍스트 길이의 한계
+
+**언어 모델의 한계**
+
+- 최신 데이터를 기반으로 답할 수 없다.
+  - 현재 시간, 최근 발매된 곡, 현재 테슬라 주가 등등
+- chatGPT와 같은 서비스는 펑션콜링 등의 기능이 추가된 서비스이다.
+
+**스트림 방식 출력**
+
+- 응답을 타이핑 하듯 실시간 전송
+- 응답이 청크 단위로 쪼개져 순차적으로 넘어온다.
+
+## 앞으로 더 공부해야 할 내용
+
+**LLM 모델 자체에 대한 공부**
+
+- ["밑바닥부터 만들면서 배우는 LLM"](https://www.inflearn.com/course/lt%EB%B0%91%EB%B0%94%EB%8B%A5%EB%B6%80%ED%84%B0-%EB%A7%8C%EB%93%A4%EB%A9%B4%EC%84%9C-%EB%B0%B0%EC%9A%B0%EB%8A%94-llm-1)(book + video)
+- ["GPT를 처음부터 직접 구현해보기"](https://github.com/karpathy/build-nanogpt?tab=readme-ov-file)(github, Youtube, Andrej karpathy)
+- ["저예산으로 ChatGPT를 직접 만들어보기"](https://github.com/karpathy/nanochat)(github, Andrej karpathy)
+
+**Antropic, deeplearning 등 AI에 관련한 질 좋은 교육 컨텐츠를 무료로 제공**
+
+- ["Prompt engineering overview"](https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview)(Antropic)
+- ["Effective context engineering for AI agents"](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)(Antropic)
+- ["Writing effective tools for agents — with agents"](https://www.anthropic.com/engineering/writing-tools-for-agents)(Antropic)
+- ["ai-agents-for-beginners"](https://github.com/microsoft/ai-agents-for-beginners/tree/main)(github, Microsoft)
+- ["DeepLearning AI Courses"](http://deeplearning.ai/courses/)(DeepLearning AI)
+- ["LangChain Academy"](https://academy.langchain.com/)(LangChain)
+- ["HuggingFace cookbook"](https://huggingface.co/learn/cookbook/ko/index)(HuggingFace)
+
+**코딩 에이전트 관련**
+
+- ["Cursor Learn"](https://cursor.com/ko/learn)(Cursor)
+- ["Claude Code in Action"](https://anthropic.skilljar.com/claude-code-in-action)(Antropic)
+- ["Prompting 101 | Code w/ Claude"](https://www.youtube.com/watch?v=ysPbXH0LpIE)(Antropic, Youtube)
+- ["Inflearn Jetbrain ai 활용 프로그래밍"](https://www.inflearn.com/course/ai-%ED%99%9C%EC%9A%A9-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%EA%B0%95%EC%9D%98-%EC%8B%9C%EB%A6%AC%EC%A6%88)(video, inflearn)
+- ["배휘동님 발표 자료"](https://drive.google.com/file/d/1h99VB5Ra5nn78ZpcXzvN8HyJbSmcX-Qn/view)(PDF)
+- ["Playwright agent"](https://www.youtube.com/watch?v=HLegcP8qxVY&t=183s)(Youtube)
+
+**다양한 ai agent를 직접 만들어보기**
+
+- ["how to build a coding agent"](https://ghuntley.com/agent/)(blog)
+
+**AI 에이전트를 평가하는 방법**
+
+- ["AI 에이전트를 효과적으로 테스트하는 방법"](https://galileo.ai/learn/test-ai-agents#essential-testing-types-for-ai-agents)(blog)
+
+**GUI를 활용한 ai agent 만들기**
+
+- ["opal"](https://opal.withgoogle.com/?mode=canvas)
+- ["n8n"](https://github.com/n8n-io/n8n)
+
+## 끝맺음
+
+- 기존에 사용하고 있던 ai agent (NotebookLM, 클로바노트, chatGPT) 등이 어떻게 만들어졌을지 상상해 볼 수 있어서 즐거웠다. 물론 훨씬 더 복잡한 로직과 구조로 이루어져있겠지만…
+- 입문이라는 책 제목 답게 초보자인 나도 어렵지 않게 읽을 수 있었다. 깊이 있는 이해나 상용 ai 애플리케이션을 만들 수 있는 지식 수준은 아니라고 생각한다.
+  ai 에이전트는 이런 것이고, 이렇게 만들 어지는구나 정도의 감을 잡을 수 있었다.
+  물론 더 어려운 지식을 학습하기 전 기초적인 지식이므로 매우 중요하다고 생각한다.
+- 책을 다 읽고 난 후, ai agent를 어떻게 평가할 수 있을지에 대한 궁금증이 생겼다.
+  ai agent를 만들고 나서, 내가 만든 ai agent가 잘 만들어졌는지 어떻게 평가할 수 있을까?
+  사용된 llm의 성능과 사용한 프롬프트에 따라 ai agent의 결과물이 많이 달라지기 때문에 ai agent 자체를 평가하기 보다는 사용된 llm과 프롬프트를 평가하는 것이 더 중요한 것일까?
